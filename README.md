@@ -21,11 +21,13 @@ TBC
 I just tried adding comments to the code as much as I could to provide explanation to some difficult subjects. Apart from that I just made very minor changes to function and variable names, avoided some of the macros. if you follow the above course you might find the below notes useful.
 
 Macros I did not use:
+
 * `SQ64` as a replacement to `Sq120ToSq64` array
 * `POP` as a replacement to `popBit` array
 * `CNT` as a replacement to `countBits` array
 
 Changes to the function names:
+
 * `allInit` instead of `AllInit`
 * `popBit` instead of `PopBit`
 * `countBits` instead of `CountBits`
@@ -44,4 +46,5 @@ Q: Why..?
 A: ...
 
 # Useful links
+
 1. Images for pieces: https://pixabay.com/images/search/chess%20pieces/

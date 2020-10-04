@@ -9,11 +9,11 @@
 */
 U64 generatePosKey(const S_BOARD *pos) {
 
-	int sq = 0;
-	U64 finalKey = 0;
-	int piece = EMPTY;
+    int sq = 0;
+    U64 finalKey = 0;
+    int piece = EMPTY;
 
-	/*
+    /*
         Iterate over the whole board (120 board) and
         ignore squares which are empty or "no-square".
 
@@ -27,18 +27,18 @@ U64 generatePosKey(const S_BOARD *pos) {
         Now XOR the the final key with the existing hash
         for that square
     */
-	for (sq = 0; sq < BRD_SQ_NUM; ++sq) {
-		piece = pos->pieces[sq];
-		if (piece!=NO_SQ && piece!=EMPTY && piece != OFFBOARD) {
-			ASSERT(piece>=wP && piece<=bK);
-			finalKey ^= PieceKeys[piece][sq];
-		}
-	}
+    for (sq = 0; sq < BRD_SQ_NUM; ++sq) {
+        piece = pos->pieces[sq];
+        if (piece!=NO_SQ && piece!=EMPTY && piece != OFFBOARD) {
+            ASSERT(piece>=wP && piece<=bK);
+            finalKey ^= PieceKeys[piece][sq];
+        }
+    }
 
     /* also XOR with side hash */
-	if (pos->side == WHITE) {
-		finalKey ^= SideKey;
-	}
+    if (pos->side == WHITE) {
+        finalKey ^= SideKey;
+    }
 
     /*
         Check if this position has en-passant
@@ -58,14 +58,14 @@ U64 generatePosKey(const S_BOARD *pos) {
         also sensible as all other values would represent
         a piece
     */
-	if (pos->enPas != NO_SQ) {
-		ASSERT(pos->enPas>=0 && pos->enPas<BRD_SQ_NUM);
-		finalKey ^= PieceKeys[EMPTY][pos->enPas];
-	}
+    if (pos->enPas != NO_SQ) {
+        ASSERT(pos->enPas>=0 && pos->enPas<BRD_SQ_NUM);
+        finalKey ^= PieceKeys[EMPTY][pos->enPas];
+    }
 
     /* Also XOR against permitted castling */
-	ASSERT(pos->castlePerm>=0 && pos->castlePerm<=15);
-	finalKey ^= CastleKeys[pos->castlePerm];
+    ASSERT(pos->castlePerm>=0 && pos->castlePerm<=15);
+    finalKey ^= CastleKeys[pos->castlePerm];
 
-	return finalKey;
+    return finalKey;
 }

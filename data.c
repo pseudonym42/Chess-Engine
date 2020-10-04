@@ -50,5 +50,23 @@ int PieceMin[13] = { false, false, true, true, false, false, false, false, true,
     value does not matter as it never gets captured
 
 */
-int PieceVal[13]= { 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000  };
+int PieceVal[13]= { 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000, 50000 };
+
+/*
+    This array matches .PNBRQKpnbrqk (both equal 13) and is used to
+    identify a piece colour
+
+*/
 int PieceCol[13] = { BOTH, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK };
+
+/*
+    These 4 arrays below are simply used to identify whether a given piece
+    is of certain type based on .PNBRQKpnbrqk
+    For example:
+
+        PieceKnight[wN] is going to return true
+*/
+int PieceKnight[13] = { false, false, true, false, false, false, false, false, true, false, false, false, false };
+int PieceKing[13] = { false, false, false, false, false, false, true, false, false, false, false, false, true };
+int PieceRookQueen[13] = { false, false, false, false, true, true, false, false, false, false, true, true, false };
+int PieceBishopQueen[13] = { false, false, false, true, false, true, false, false, false, true, false, true, false };

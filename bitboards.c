@@ -31,15 +31,17 @@ int popBit(U64 *bb) {
 
 int countBits(U64 bb) {
     /*
-        counts and returns the number of bits which
-        are 1 inside the bitboard
+        counts the number of bits inside the
+        bitboard which are equal to 1
+
+        returns the total count
     */
     int count;
 
     /*
         this for loop written like this because
-        c/c++ dev like hacking shit rather than writing
-        normal code
+        c/c++ devs like hacking shit rather than
+        writing normal read-able code
     */
     for (count = 0; bb; count++, bb &= bb - 1);
     return count;
@@ -49,25 +51,24 @@ int countBits(U64 bb) {
 void printBitBoard(U64 bb) {
 
     U64 shiftMe = 1ULL;
+    int rank = 0,
+        file = 0,
+        sq = 0,
+        sq64 = 0;
 
-	int rank = 0;
-	int file = 0;
-	int sq = 0;
-	int sq64 = 0;
+    printf("\n");
+    for (rank = RANK_8; rank >= RANK_1; --rank) {
+        for (file = FILE_A; file <= FILE_H; ++file) {
+            sq = FR2SQ(file, rank); // 120 based
+            sq64 = Sq120ToSq64[sq]; // 64 based
 
-	printf("\n");
-	for(rank = RANK_8; rank >= RANK_1; --rank) {
-		for(file = FILE_A; file <= FILE_H; ++file) {
-			sq = FR2SQ(file, rank); // 120 based
-			sq64 = Sq120ToSq64[sq]; // 64 based
+            if ((shiftMe << sq64) & bb)
+                printf("X");
+            else
+                printf("-");
 
-			if((shiftMe << sq64) & bb)
-				printf("X");
-			else
-				printf("-");
-
-		}
-		printf("\n");
-	}
+        }
+        printf("\n");
+    }
     printf("\n\n");
 }

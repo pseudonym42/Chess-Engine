@@ -2,8 +2,122 @@
 #include "defs.h"
 
 
+int checkBoard(const S_BOARD *pos) {
+    /*
+        This function takes a pointer to a given S_BOARD
+        and copies various data from the board and fills in
+        the below temp_ vars thus creating an exact copy of
+        some data.
 
-void UpdateListsMaterial(S_BOARD *pos) {
+        Then this temp_ data is compared to values stored in
+        board's various items, e.g. pos->pieces. In this way
+        we are making sure that data within S_BOARD is valid
+        and consistent and data between different "containers"
+        does not contradict
+
+        If any of the assertions below fail that means the data
+        is invalid and error gets raised. If all assertions pass
+        then this function returns 1 (true)
+    */
+
+    int temp_pceNum[13] = {0};
+    int temp_bigPce[2] = {0};
+    int temp_majPce[2] = {0};
+    int temp_minPce[2] = {0};
+    int temp_material[2] = {0};
+
+    int sq64,
+        temp_piece,
+        temp_pce_num,
+        sq120,
+        colour,
+        pcount;
+
+    U64 temp_pawns[3] = {0ULL, 0ULL, 0ULL};
+
+    temp_pawns[WHITE] = pos->pawns[WHITE];
+    temp_pawns[BLACK] = pos->pawns[BLACK];
+    temp_pawns[BOTH] = pos->pawns[BOTH];
+
+    // check pceNum vs pList vs pieces
+    for (temp_piece = wP; temp_piece <= bK; ++temp_piece) {
+        for (temp_pce_num = 0; temp_pce_num < pos->pceNum[temp_piece]; ++temp_pce_num) {
+            sq120 = pos->pList[temp_piece][temp_pce_num];
+            ASSERT(pos->pieces[sq120]==temp_piece);
+        }
+    }
+
+    // based on values in pos->pieces populate
+    // values of temp_bigPce, temp_minPce, temp_majPce
+    // and temp_material
+    for (sq64 = 0; sq64 < 64; ++sq64) {
+        sq120 = Sq64ToSq120[sq64];
+        temp_piece = pos->pieces[sq120];
+        temp_pceNum[temp_piece]++;
+        colour = PieceCol[temp_piece];
+        if (PieceBig[temp_piece] == true) temp_bigPce[colour]++;
+        if (PieceMin[temp_piece] == true) temp_minPce[colour]++;
+        if (PieceMaj[temp_piece] == true) temp_majPce[colour]++;
+
+        temp_material[colour] += PieceVal[temp_piece];
+    }
+
+    for (temp_piece = wP; temp_piece <= bK; ++temp_piece) {
+        ASSERT(temp_pceNum[temp_piece]==pos->pceNum[temp_piece]);
+    }
+
+    // check bitboards count
+    pcount = countBits(temp_pawns[WHITE]);
+    ASSERT(pcount == pos->pceNum[wP]);
+    pcount = countBits(temp_pawns[BLACK]);
+    ASSERT(pcount == pos->pceNum[bP]);
+    pcount = countBits(temp_pawns[BOTH]);
+    ASSERT(pcount == (pos->pceNum[bP] + pos->pceNum[wP]));
+
+    // check bitboards squares
+    while (temp_pawns[WHITE]) {
+        sq64 = popBit(&temp_pawns[WHITE]);
+        ASSERT(pos->pieces[Sq64ToSq120[sq64]] == wP);
+    }
+
+    while (temp_pawns[BLACK]) {
+        sq64 = popBit(&temp_pawns[BLACK]);
+        ASSERT(pos->pieces[Sq64ToSq120[sq64]] == bP);
+    }
+
+    while (temp_pawns[BOTH]) {
+        sq64 = popBit(&temp_pawns[BOTH]);
+        ASSERT(
+            (pos->pieces[Sq64ToSq120[sq64]] == bP) ||
+            (pos->pieces[Sq64ToSq120[sq64]] == wP)
+        );
+    }
+
+    ASSERT(temp_material[WHITE]==pos->material[WHITE] && temp_material[BLACK]==pos->material[BLACK]);
+    ASSERT(temp_minPce[WHITE]==pos->minPce[WHITE] && temp_minPce[BLACK]==pos->minPce[BLACK]);
+    ASSERT(temp_majPce[WHITE]==pos->majPce[WHITE] && temp_majPce[BLACK]==pos->majPce[BLACK]);
+    ASSERT(temp_bigPce[WHITE]==pos->bigPce[WHITE] && temp_bigPce[BLACK]==pos->bigPce[BLACK]);
+
+    ASSERT(pos->side==WHITE || pos->side==BLACK);
+    ASSERT(generatePosKey(pos)==pos->posKey);
+
+    ASSERT(
+        pos->enPas==NO_SQ ||
+        (RanksBrd[pos->enPas]==RANK_6 && pos->side == WHITE) ||
+        (RanksBrd[pos->enPas]==RANK_3 && pos->side == BLACK)
+     );
+
+    ASSERT(pos->pieces[pos->KingSq[WHITE]] == wK);
+    ASSERT(pos->pieces[pos->KingSq[BLACK]] == bK);
+
+    return true;
+}
+
+
+void updateListsMaterial(S_BOARD *pos) {
+/*
+    This function iterates over the whole board and
+*/
 
     int piece,
         sq,
@@ -16,21 +130,40 @@ void UpdateListsMaterial(S_BOARD *pos) {
         if (piece!=OFFBOARD && piece!= EMPTY) {
             colour = PieceCol[piece];
 
-            if ( PieceBig[piece] == true) pos->bigPce[colour]++;
-            if ( PieceMin[piece] == true) pos->minPce[colour]++;
-            if ( PieceMaj[piece] == true) pos->majPce[colour]++;
+            if (PieceBig[piece] == true) pos->bigPce[colour]++;
+            if (PieceMin[piece] == true) pos->minPce[colour]++;
+            if (PieceMaj[piece] == true) pos->majPce[colour]++;
 
             pos->material[colour] += PieceVal[piece];
 
-            // piece list
-            // pList[wP][0] = a1;
-            // pList[wP][1] = a2;
+            /*
+                for more details re pList and pceNum
+                see defs.h, in short:
 
+                pList contains data about peice type
+                and their quantity:
+
+                    pList[wN][1] = G1;
+
+                pceNum contains just info about quantity
+                of a particular piece type:
+
+                    pceNum[wN] = 1;
+
+            */
             pos->pList[piece][pos->pceNum[piece]] = sq;
             pos->pceNum[piece]++;
 
             if (piece==wK) pos->KingSq[WHITE] = sq;
             if (piece==bK) pos->KingSq[BLACK] = sq;
+
+            if (piece==wP) {
+                SETBIT(pos->pawns[WHITE], Sq120ToSq64[sq]);
+                SETBIT(pos->pawns[BOTH], Sq120ToSq64[sq]);
+            } else if (piece==bP) {
+                SETBIT(pos->pawns[BLACK], Sq120ToSq64[sq]);
+                SETBIT(pos->pawns[BOTH], Sq120ToSq64[sq]);
+            }
         }
     }
 }
@@ -174,7 +307,7 @@ int parseFEN (char *fen, S_BOARD *pos) {
 
     pos->posKey = generatePosKey(pos);
 
-
+    updateListsMaterial(pos);
     return 0;
 }
 
@@ -194,6 +327,9 @@ void resetBoard (S_BOARD *pos) {
         pos->bigPce[index] = 0;
         pos->majPce[index] = 0;
         pos->minPce[index] = 0;
+    }
+
+    for (index = 0; index < 3; ++index) {
         pos->pawns[index] = 0ULL;
     }
 
@@ -209,6 +345,7 @@ void resetBoard (S_BOARD *pos) {
     pos->hisPly = 0;
     pos->castlePerm = 0;
     pos->posKey = 0ULL;
+    pos->material[WHITE] = pos->material[BLACK] = 0;
 }
 
 void printBoard(const S_BOARD *pos) {

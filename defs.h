@@ -118,7 +118,7 @@ enum { RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8, RANK_NONE
 
 enum { WHITE, BLACK, BOTH };
 
-/* This enum represents board square values */
+/* This enum represents board square values from BRD_SQ_NUM perspective */
 enum {
     A1 = 21, B1, C1, D1, E1, F1, G1, H1,
     A2 = 31, B2, C2, D2, E2, F2, G2, H2,
@@ -135,23 +135,31 @@ enum {
 /* Board is defined using this struct below */
 typedef struct {
 
-    // this represents all of the board squares; each
-    // square can be either from a hidden or an inner one
+    /*
+        this represents all of the board squares and pieces;
+        each item in this array can be either
+
+            * EMPTY
+                or
+            * OFFBOARD
+                or
+            * a piece e.g.: bB
+    */
     int pieces[BRD_SQ_NUM];
 
     /*
         We are going to store an array of all of the pawns
-        located on the board. There are going to be 2 items in
+        located on the board. There are going to be 3 items in
         this array, each item is going to be 64 bits int number.
 
         Each item is going to represent where on the inner board
         a pawn is located - as each bit in U64 is going to be either
         0 (no pawn) or 1 - pawn
 
-        There are 2 items because we need "pawns data" for black and
-        white
+        There are 3 items because we need "pawns data" for black,
+        white and both
     */
-    U64 pawns[2];
+    U64 pawns[3];
 
     // these are big pieces - non-pawn pieces, per colour
     int bigPce[2];
@@ -212,8 +220,8 @@ typedef struct {
         collection of all of the pieces on the board and their
         corresponding location
 
-        The first index (13) represents number of piece types, and
-        the second (10) - max number of this particular piece that
+        The first index (13) represents a piece type, and the
+        second (10) - max number of this particular piece that
         could be on the board, for example the max number of white
         rooks is 10 - i.e. 2 initial and 8 if all pawns upgraded to
         rooks
@@ -222,11 +230,10 @@ typedef struct {
         by 20%
 
         For example, white knigts in the beginning of the game:
-            pList[wN][0] = G1;
-            pList[wN][1] = B1;
+            pList[wN][1] = G1;
+            pList[wN][2] = B1;
     */
     int pList[13][10];
-
 
 } S_BOARD;
 
@@ -248,6 +255,15 @@ extern int PieceMaj[13];
 extern int PieceMin[13];
 extern int PieceVal[13];
 extern int PieceCol[13];
+
+extern int FilesBrd[BRD_SQ_NUM];
+extern int RanksBrd[BRD_SQ_NUM];
+
+extern int PieceKnight[13];
+extern int PieceKing[13];
+extern int PieceRookQueen[13];
+extern int PieceBishopQueen[13];
+
 
 
 /* MACROS */
@@ -278,6 +294,11 @@ extern int PieceCol[13];
                   ((U64)RAND_15_BITS() << 45) + \
                   (((U64)RAND_15_BITS() & 0xf) << 60)     )
 
+#define IsBQ(p) (PieceBishopQueen[(p)])
+#define IsRQ(p) (PieceRookQueen[(p)])
+#define IsKn(p) (PieceKnight[(p)])
+#define IsKi(p) (PieceKing[(p)])
+
 
 /* FUNCTIONS */
 
@@ -295,7 +316,11 @@ extern U64 generatePosKey(const S_BOARD *pos);
 
 /* board.c */
 extern void resetBoard(S_BOARD *pos);
-extern int parseFEN(char *fen, S_BOARD *pos);
 extern void printBoard(const S_BOARD *pos);
+extern void updateListsMaterial(S_BOARD *pos);
+extern int parseFEN(char *fen, S_BOARD *pos);
+extern int checkBoard(const S_BOARD *pos);
+
+
 
 #endif

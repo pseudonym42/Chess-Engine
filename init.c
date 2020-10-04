@@ -39,6 +39,13 @@ U64 PieceKeys[13][120];
 U64 SideKey;
 U64 CastleKeys[16];
 
+/*
+    These arrays help get file or rank number of square
+    by square number
+*/
+int FilesBrd[BRD_SQ_NUM];
+int RanksBrd[BRD_SQ_NUM];
+
 
 /* Print binary representation of a U64 number */
 void printfBinary(U64 number) {
@@ -54,6 +61,34 @@ void printfBinary(U64 number) {
     }
     printf("\n");
 }
+
+/*
+    Initilises arrays which are used for getting file
+    and rank for a given square
+*/
+void initFilesRanksBrd() {
+    int index = 0,
+        file = FILE_A,
+        rank = RANK_1,
+        sq = A1;
+
+    /* set everything to OFFBOARD initially */
+    for (index = 0; index < BRD_SQ_NUM; ++index) {
+        FilesBrd[index] = OFFBOARD;
+        RanksBrd[index] = OFFBOARD;
+    }
+
+    for (rank = RANK_1; rank <= RANK_8; ++rank) {
+        for (file = FILE_A; file <= FILE_H; ++file) {
+            // get the square number from the combination
+            // of the file and the rank
+            sq = FR2SQ(file, rank);
+            FilesBrd[sq] = file;
+            RanksBrd[sq] = rank;
+        }
+    }
+}
+
 
 /*
     Before game starts, this function initialises a
@@ -148,8 +183,8 @@ void initLookUpArrays() {
         Sq64ToSq120[index] = 120;
     }
 
-    for (rank = RANK_1; rank <=RANK_8; ++rank) {
-        for (file = FILE_A; file <=FILE_H; ++file) {
+    for (rank = RANK_1; rank <= RANK_8; ++rank) {
+        for (file = FILE_A; file <= FILE_H; ++file) {
             sq = FR2SQ(file, rank);
             Sq64ToSq120[sq64] = sq;
             Sq120ToSq64[sq] = sq64;
@@ -214,4 +249,5 @@ void allInit(void) {
     initLookUpArrays();
     initBitMasks();
     initHashKeys();
+    initFilesRanksBrd();
 }

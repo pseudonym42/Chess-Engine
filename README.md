@@ -40,7 +40,7 @@ Changes to the function names:
 * `updateListsMaterial` instead of `UpdateListsMaterial`
 * `initFilesRanksBrd` instead of `InitFilesRanksBrd`
 * `checkBoard` instead of `CheckBoard`
-
+* `squareAttacked` instead of `SqAttacked`
 
 # Some common questions?
 

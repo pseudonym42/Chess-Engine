@@ -1,2 +1,5 @@
 # ignore pre-compiled header files
 *.h.gch
+
+# ignore compiled executables
+chess_exe

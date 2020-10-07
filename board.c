@@ -117,6 +117,8 @@ int checkBoard(const S_BOARD *pos) {
 void updateListsMaterial(S_BOARD *pos) {
 /*
     This function iterates over the whole board and
+    for each piece (i.e. not empty and not off board)
+    in pos->pieces it updates corresponding pos arrays
 */
 
     int piece,

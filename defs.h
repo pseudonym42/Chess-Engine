@@ -321,6 +321,8 @@ extern void updateListsMaterial(S_BOARD *pos);
 extern int parseFEN(char *fen, S_BOARD *pos);
 extern int checkBoard(const S_BOARD *pos);
 
+/* attack.c */
+extern int squareAttacked(const int sq, const int side, const S_BOARD *pos);
 
 
 #endif

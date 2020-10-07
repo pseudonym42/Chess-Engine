@@ -70,7 +70,7 @@ const int KiDir[8] = { -1, -10, 1, 10, -9, -11, 11, 9 };
     side   attacking side
     pos    position
 */
-int SqAttacked(const int sq, const int side, const S_BOARD *pos) {
+int squareAttacked(const int sq, const int side, const S_BOARD *pos) {
 
     int pce,
         index,
@@ -91,7 +91,49 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos) {
     // knights attacks
     for (index = 0; index < 8; ++index) {
         pce = pos->pieces[sq + KnDir[index]];
-        if (IsKn(pce) && PieceCol[pce]==side) {
+        if (pce != OFFBOARD && IsKn(pce) && PieceCol[pce]==side) {
+            return true;
+        }
+    }
+
+    // rooks and queens attacks
+    for (index = 0; index < 4; ++index) {
+        dir = RkDir[index];
+        t_sq = sq + dir;
+        pce = pos->pieces[t_sq];
+        while (pce != OFFBOARD) {
+            if (pce != EMPTY) {
+                if (IsRQ(pce) && PieceCol[pce] == side) {
+                    return true;
+                }
+                break;
+            }
+            t_sq += dir;
+            pce = pos->pieces[t_sq];
+        }
+    }
+
+    // bishops and queens attacks
+    for (index = 0; index < 4; ++index) {
+        dir = BiDir[index];
+        t_sq = sq + dir;
+        pce = pos->pieces[t_sq];
+        while (pce != OFFBOARD) {
+            if (pce != EMPTY) {
+                if (IsBQ(pce) && PieceCol[pce] == side) {
+                    return true;
+                }
+                break;
+            }
+            t_sq += dir;
+            pce = pos->pieces[t_sq];
+        }
+    }
+
+    // kings attacks
+    for (index = 0; index < 8; ++index) {
+        pce = pos->pieces[sq + KiDir[index]];
+        if (pce != OFFBOARD && IsKi(pce) && PieceCol[pce]==side) {
             return true;
         }
     }

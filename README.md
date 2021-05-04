@@ -5,6 +5,12 @@ This is a chess engine implementation based on a
 
 The core functionality is written in C.
 
+# What is this?
+
+How to build and run:
+
+    make && ./chess_exe
+
 # Why did I take this course?
 
 I wanted to learn C and understand better how chess game engines work. As I was going through this course I found some of the topics super challenging but they were extremely rewarding.
@@ -41,11 +47,13 @@ Changes to the function names:
 * `initFilesRanksBrd` instead of `InitFilesRanksBrd`
 * `checkBoard` instead of `CheckBoard`
 * `squareAttacked` instead of `SqAttacked`
+* `printSq` instead of `PrSq`
+* `printMove` instead of `PrMove`
 
 # Some common questions?
 
 Q. Why certain functions/arrays are declared in multiple places e.g. in both the `defs.h` file and the `init.c` file?  
-A: They are not, read about it [here](https://en.wikipedia.org/wiki/External_variable#Example_.28C_programming_language.29)  
+A: They are not, read about it [here](https://en.wikipedia.org/wiki/External_variable#Example_.28C_programming_language.29), or [here](https://stackoverflow.com/a/1433387)
 
 Q: How many moves are calculated by AI per second?  
 A: Around 500k

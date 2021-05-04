@@ -73,6 +73,9 @@ exit(1);}
 // of half moves in a game
 #define MAX_GAME_MOVES 2048
 
+// max number of moves that can be in a given position
+#define MAX_GAME_MOVES 2048
+
 /*
     This struct allows to store data about each half move
     so we could store them in history and develop "undo move"
@@ -81,6 +84,18 @@ exit(1);}
 
 // https://en.wikipedia.org/wiki/Forsyth-Edwards_Notation
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+
+/*
+    This enaum contains information about moves. `move` stores info about
+    the move itself and `score` is used for moves ordering
+
+    See "GAME MOVE" below which describes how moves are stored
+
+*/
+typedef struct {
+	int move;
+	int score;
+} S_MOVE;
 
 typedef struct {
     int move;
@@ -265,6 +280,94 @@ extern int PieceRookQueen[13];
 extern int PieceBishopQueen[13];
 
 
+/*
+    GAME MOVE 
+
+    If you look at the aquare tables in this file and init.c you will
+    see that number of available squares for moves located on the inner
+    board are numbered from 21 to 98, which means we just need 7 bits
+    to store info about from which square a piece moved and additional
+    7 bits to which square a piece moved. This is because 98-21=76, so
+    6 bits would not be enough as it maxes out to 63.
+
+    The info which we need to store is shown below. We store:
+        "From square" using 7 bits;
+
+        "To square" using 7 bits;
+
+        Captured piece using 4 bits, here 4 bits is enough
+        as we have only 12 types of pieces (wP, wN ...) and to 
+        represent them 4 bits is enough
+
+        En Passant - 1 bit
+
+        Pawn Start - 1 bit
+
+        Type of piece promotion (if it happend, this applies to
+        pawns only) - 4 bits, same as above re captured piece
+
+        Castling - 1 bit
+
+    0000 0000 0000 0000 0000 0111 1111 -> From square:    0x7F
+    0000 0000 0000 0011 1111 1000 0000 -> To square:      >> 7, 0x7F
+    0000 0000 0011 1100 0000 0000 0000 -> Captured piece: >> 14, 0xF
+    0000 0000 0100 0000 0000 0000 0000 -> En Passant:     0x40000
+    0000 0000 1000 0000 0000 0000 0000 -> Pawn Start:     0x80000
+    0000 1111 0000 0000 0000 0000 0000 -> Promoted Piece: >> 20, 0xF
+    0001 0000 0000 0000 0000 0000 0000 -> Castle:         0x1000000   
+
+    The reason info is stored as explained above is this would help
+    us get information about moves quickly and efficiently using bitwise
+    operations and the macros listed below. If we stored the same data
+    using `int`s for each section (i.e. int for "From square", int for
+    "To square" etc) then it would a bit more difficult to process and
+    understand it. Now we have a single large integer which can be
+    represented in hex form to help us understand the details of a move
+
+    Also note that the hex number on the right hand side of each section
+    are used to describe the value in hex not decimal as it is easier
+    to understand and visualise what bit are populated. The `>>` means 
+    shift number of bits. For more details see https://youtu.be/N6yImiyzWpo
+
+    So how would we use the macros now to get the data and how do we use
+    the above matrix to store move info? Here's an example:
+
+    int move = 0;  // we start at zero
+	int from = 6;  // move was from square number 6
+    int to = 12;   // move was to square number 12
+	int cap = wR;  // during the move the white rook was captured
+    int prom = bR; // the piece was promoted to black rook
+	
+    // so here's how you can create a move now
+	move = ( ( from ) | ( to << 7 ) | ( cap << 14 ) | ( prom << 20) );
+
+    // and here's how you can retreive it
+	printf("from:%d to:%d cap:%d prom:%d\n",
+		FROMSQ(move),
+        TOSQ(move),
+        CAPTURED(move),
+		PROMOTED(move));
+
+    Now the above will print you:
+
+        from:6 to:12 cap:4 prom:10
+*/
+
+/*
+    These are moves specific macros
+*/
+#define FROMSQ(m) ((m) & 0x7F)
+#define TOSQ(m) (((m)>>7) & 0x7F)
+#define CAPTURED(m) (((m)>>14) & 0xF)
+#define PROMOTED(m) (((m)>>20) & 0xF)
+
+/* These flags are used for bit shifting */
+#define MFLAGEP 0x40000
+#define MFLAGPS 0x80000
+#define MFLAGCA 0x1000000
+#define MFLAGCAP 0x7C000
+#define MFLAGPROM 0xF00000
+
 
 /* MACROS */
 
@@ -324,5 +427,8 @@ extern int checkBoard(const S_BOARD *pos);
 /* attack.c */
 extern int squareAttacked(const int sq, const int side, const S_BOARD *pos);
 
+/* io.c */
+extern char *printMove(const int move);
+extern char *printSq(const int sq);
 
 #endif

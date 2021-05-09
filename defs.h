@@ -283,7 +283,7 @@ extern int PieceKnight[13];
 extern int PieceKing[13];
 extern int PieceRookQueen[13];
 extern int PieceBishopQueen[13];
-
+extern int PieceSlides[13];
 
 /*
     GAME MOVE 
@@ -356,6 +356,9 @@ extern int PieceBishopQueen[13];
     Now the above will print you:
 
         from:6 to:12 cap:4 prom:10
+
+    Note that to make it eaiser to create a move a corresponding macro was created
+    which is defined in `movegen.c` module
 */
 
 /*
@@ -435,6 +438,7 @@ extern int squareAttacked(const int sq, const int side, const S_BOARD *pos);
 /* io.c */
 extern char *printMove(const int move);
 extern char *printSq(const int sq);
+extern void printMoveList(const S_MOVELIST *list);
 
 //validate.c
 extern int sqOnBoard(const int sq);
@@ -443,6 +447,8 @@ extern int fileRankValid(const int fr);
 extern int pieceValidEmpty(const int pce);
 extern int pieceValid(const int pce);
 
+// movegen.c
+extern void generateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 
 
 

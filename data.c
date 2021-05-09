@@ -70,3 +70,9 @@ int PieceKnight[13] = { false, false, true, false, false, false, false, false, t
 int PieceKing[13] = { false, false, false, false, false, false, true, false, false, false, false, false, true };
 int PieceRookQueen[13] = { false, false, false, false, true, true, false, false, false, false, true, true, false };
 int PieceBishopQueen[13] = { false, false, false, true, false, true, false, false, false, true, false, true, false };
+
+/*
+    This array is for identifying whether a piece is a sliding piece i.e. Queen, Rook or Bishop
+
+*/
+int PieceSlides[13] = { false, false, false, true, true, true, false, false, false, true, true, true, false };

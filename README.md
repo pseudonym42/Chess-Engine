@@ -27,37 +27,42 @@ I tried to add comments to the code as much as I could to provide explanation to
 
 Macros I did NOT use:
 
-* `SQ64` as a replacement to `Sq120ToSq64` array
-* `SQ120` as a replacement to `Sq64ToSq120` array
-* `POP` as a replacement to `popBit` function
 * `CNT` as a replacement to `countBits` function
+* `POP` as a replacement to `popBit` function
+* `SQ120` as a replacement to `Sq64ToSq120` array
+* `SQ64` as a replacement to `Sq120ToSq64` array
 
 Changes to the function names:
 
-* `allInit` instead of `AllInit`
-* `popBit` instead of `PopBit`
-* `countBits` instead of `CountBits`
-* `initBitMasks` instead of `InitBitMasks`
-* `generatePosKey` instead of `GeneratePosKey`
-* `initLookUpArrays` instead of `InitSq120To64`
-* `resetBoard` instead of `ResetBoard`
-* `parseFEN` instead of `Parse_Fen`
-* `printBoard` instead of `PrintBoard`
-* `updateListsMaterial` instead of `UpdateListsMaterial`
-* `initFilesRanksBrd` instead of `InitFilesRanksBrd`
-* `checkBoard` instead of `CheckBoard`
-* `squareAttacked` instead of `SqAttacked`
-* `printSq` instead of `PrSq`
-* `printMove` instead of `PrMove`
-* `addQuietMove` instead of `AddQuietMove`
+* `addBlackPawnCapMove` instead of `AddBlackPawnCapMove`
+* `addBlackPawnMove` instead of `AddBlackPawnMove`
 * `addCaptureMove` instead of `AddCaptureMove`
 * `addEnPassantMove` instead of `AddEnPassantMove`
-* `generateAllMoves` instead of `GenerateAllMoves`
-* `sqOnBoard` instead of `SqOnBoard`
-* `sideValid` instead of `SideValid`
+* `allInit` instead of `AllInit`
+* `addQuietMove` instead of `AddQuietMove`
+* `addWhitePawnCapMove` instead of `AddWhitePawnCapMove`
+* `addWhitePawnMove` instead of `AddWhitePawnMove`
+* `checkBoard` instead of `CheckBoard`
+* `countBits` instead of `CountBits`
 * `fileRankValid` instead of `FileRankValid`
-* `pieceValidEmpty` instead of `PieceValidEmpty`
+* `generateAllMoves` instead of `GenerateAllMoves`
+* `generatePosKey` instead of `GeneratePosKey`
+* `initBitMasks` instead of `InitBitMasks`
+* `initFilesRanksBrd` instead of `InitFilesRanksBrd`
+* `initLookUpArrays` instead of `InitSq120To64`
+* `parseFEN` instead of `Parse_Fen`
 * `pieceValid` instead of `PieceValid`
+* `pieceValidEmpty` instead of `PieceValidEmpty`
+* `popBit` instead of `PopBit`
+* `printBoard` instead of `PrintBoard`
+* `printMove` instead of `PrMove`
+* `printMoveList` instead of `PrintMoveList`
+* `printSq` instead of `PrSq`
+* `updateListsMaterial` instead of `UpdateListsMaterial`
+* `resetBoard` instead of `ResetBoard`
+* `sideValid` instead of `SideValid`
+* `sqOnBoard` instead of `SqOnBoard`
+* `squareAttacked` instead of `SqAttacked`
 
 
 # Some common questions?

@@ -2,16 +2,13 @@
 #include "defs.h"
 
 char *printSq(const int sq) {
-	
 	static char SqStr[3];
 	
 	int file = FilesBrd[sq];
 	int rank = RanksBrd[sq];
 	
 	sprintf(SqStr, "%c%c", ('a'+file), ('1'+rank));
-	
 	return SqStr;
-
 }
 
 char *printMove(const int move) {
@@ -38,6 +35,21 @@ char *printMove(const int move) {
 	} else {
 		sprintf(MvStr, "%c%c%c%c", ('a'+ff), ('1'+rf), ('a'+ft), ('1'+rt));
 	}
-	
 	return MvStr;
+}
+
+void printMoveList(const S_MOVELIST *list) {
+	int index = 0;
+	int score = 0;
+	int move = 0;
+	printf("MoveList:\n", list->count);
+	
+	for(index = 0; index < list->count; ++index) {
+	
+		move = list->moves[index].move;
+		score = list->moves[index].score;
+		
+		printf("Move:%d > %s (score:%d)\n", index+1, printMove(move), score);
+	}
+	printf("MoveList Total %d Moves:\n\n", list->count);
 }

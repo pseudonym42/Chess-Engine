@@ -325,15 +325,23 @@ void resetBoard (S_BOARD *pos) {
         pos->pieces[Sq64ToSq120[index]] = EMPTY;
     }
 
-    for (index = 0; index < 2; ++index) {
-        pos->bigPce[index] = 0;
-        pos->majPce[index] = 0;
-        pos->minPce[index] = 0;
-    }
+    // for (index = 0; index < 2; ++index) {
+    //     pos->bigPce[index] = 0;
+    //     pos->majPce[index] = 0;
+    //     pos->minPce[index] = 0;
+    // }
 
-    for (index = 0; index < 3; ++index) {
-        pos->pawns[index] = 0ULL;
-    }
+    // for (index = 0; index < 3; ++index) {
+    //     pos->pawns[index] = 0ULL;
+    // }
+
+    for(index = 0; index < 3; ++index) {
+		pos->bigPce[index] = 0;
+		pos->majPce[index] = 0;
+		pos->minPce[index] = 0;
+		pos->material[index] = 0;
+		pos->pawns[index] = 0ULL;
+	}
 
     for(index = 0; index < 13; ++index) {
         pos->pceNum[index] = 0;
@@ -347,7 +355,7 @@ void resetBoard (S_BOARD *pos) {
     pos->hisPly = 0;
     pos->castlePerm = 0;
     pos->posKey = 0ULL;
-    pos->material[WHITE] = pos->material[BLACK] = 0;
+    // pos->material[WHITE] = pos->material[BLACK] = 0;
 }
 
 void printBoard(const S_BOARD *pos) {

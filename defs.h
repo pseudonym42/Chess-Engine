@@ -74,7 +74,7 @@ exit(1);}
 #define MAX_GAME_MOVES 2048
 
 // max number of moves that can be in a given position
-#define MAX_GAME_MOVES 2048
+#define MAX_POSITION_MOVES 256
 
 /*
     This struct allows to store data about each half move
@@ -96,6 +96,11 @@ typedef struct {
 	int move;
 	int score;
 } S_MOVE;
+
+typedef struct {
+	S_MOVE moves[MAX_POSITION_MOVES];
+	int count;
+} S_MOVELIST;
 
 typedef struct {
     int move;
@@ -430,5 +435,18 @@ extern int squareAttacked(const int sq, const int side, const S_BOARD *pos);
 /* io.c */
 extern char *printMove(const int move);
 extern char *printSq(const int sq);
+
+//validate.c
+extern int sqOnBoard(const int sq);
+extern int sideValid(const int side);
+extern int fileRankValid(const int fr);
+extern int pieceValidEmpty(const int pce);
+extern int pieceValid(const int pce);
+
+
+
+
+
+
 
 #endif

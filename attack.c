@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "defs.h"
 
 /*
@@ -76,6 +77,10 @@ int squareAttacked(const int sq, const int side, const S_BOARD *pos) {
         index,
         t_sq,
         dir;
+
+    ASSERT(sqOnBoard(sq));
+	ASSERT(sideValid(side));
+	ASSERT(checkBoard(pos));
 
     // check pawn attacks
     if (side == WHITE) {

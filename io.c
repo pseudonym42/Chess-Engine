@@ -1,4 +1,4 @@
-#include "stdio.h"
+#include <stdio.h>
 #include "defs.h"
 
 char *printSq(const int sq) {

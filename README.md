@@ -49,6 +49,16 @@ Changes to the function names:
 * `squareAttacked` instead of `SqAttacked`
 * `printSq` instead of `PrSq`
 * `printMove` instead of `PrMove`
+* `addQuietMove` instead of `AddQuietMove`
+* `addCaptureMove` instead of `AddCaptureMove`
+* `addEnPassantMove` instead of `AddEnPassantMove`
+* `generateAllMoves` instead of `GenerateAllMoves`
+* `sqOnBoard` instead of `SqOnBoard`
+* `sideValid` instead of `SideValid`
+* `fileRankValid` instead of `FileRankValid`
+* `pieceValidEmpty` instead of `PieceValidEmpty`
+* `pieceValid` instead of `PieceValid`
+
 
 # Some common questions?
 

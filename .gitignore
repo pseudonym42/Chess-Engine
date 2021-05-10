@@ -5,3 +5,4 @@
 chess_exe
 
 # ignore IDE settings files
+.vscode

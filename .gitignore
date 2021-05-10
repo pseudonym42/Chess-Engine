@@ -3,3 +3,5 @@
 
 # ignore compiled executables
 chess_exe
+
+# ignore IDE settings files

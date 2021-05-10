@@ -5,16 +5,16 @@
 
 #define SQOFFBOARD(sq) (FilesBrd[(sq)]==OFFBOARD)
 
-int LoopSlidePce[8] = {
+const int LoopSlidePce[8] = {
 	wB, wR, wQ, 0, bB, bR, bQ, 0
 };
 
-int LoopNonSlidePce[6] = {
+const int LoopNonSlidePce[6] = {
 	wN, wK, 0, bN, bK, 0
 };
 
-int LoopSlideIndex[2] = { 0, 4 };
-int LoopNonSlideIndex[2] = { 0, 3 };
+const int LoopSlideIndex[2] = { 0, 4 };
+const int LoopNonSlideIndex[2] = { 0, 3 };
 
 /*
 	This and the NumDir array are related. Look
@@ -51,7 +51,7 @@ int LoopNonSlideIndex[2] = { 0, 3 };
 	(i.e. where the wN is lcoated) by adding the below numbers
 	from the corresponding nested array
 */
-int PceDir[13][8] = {
+const int PceDir[13][8] = {
 	{ 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0 },
 	{ -8, -19,	-21, -12, 8, 19, 21, 12 },
@@ -77,29 +77,29 @@ int PceDir[13][8] = {
 	Note that the zeros are for EMPTY, wP ans bP as this array
 	is not used for them
 */
-int NumDir[13] = {
+const int NumDir[13] = {
 	0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8
 };
 
-void addQuietMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
+static void addQuietMove(const S_BOARD *pos, int move, S_MOVELIST *list) {
 	list->moves[list->count].move = move;
 	list->moves[list->count].score = 0;
 	list->count++;
 }
 
-void addCaptureMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
+static void addCaptureMove(const S_BOARD *pos, int move, S_MOVELIST *list) {
 	list->moves[list->count].move = move;
 	list->moves[list->count].score = 0;
 	list->count++;
 }
 
-void addEnPassantMove( const S_BOARD *pos, int move, S_MOVELIST *list ) {
+static void addEnPassantMove(const S_BOARD *pos, int move, S_MOVELIST *list) {
 	list->moves[list->count].move = move;
 	list->moves[list->count].score = 0;
 	list->count++;
 }
 
-void addWhitePawnCapMove( const S_BOARD *pos, const int from, const int to, const int cap, S_MOVELIST *list ) {
+static void addWhitePawnCapMove(const S_BOARD *pos, const int from, const int to, const int cap, S_MOVELIST *list) {
 	ASSERT(pieceValidEmpty(cap));
 	ASSERT(sqOnBoard(from));
 	ASSERT(sqOnBoard(to));
@@ -114,7 +114,7 @@ void addWhitePawnCapMove( const S_BOARD *pos, const int from, const int to, cons
 	}
 }
 
-void addWhitePawnMove( const S_BOARD *pos, const int from, const int to, S_MOVELIST *list ) {
+static void addWhitePawnMove(const S_BOARD *pos, const int from, const int to, S_MOVELIST *list) {
 	ASSERT(sqOnBoard(from));
 	ASSERT(sqOnBoard(to));
 
@@ -128,7 +128,7 @@ void addWhitePawnMove( const S_BOARD *pos, const int from, const int to, S_MOVEL
 	}
 }
 
-void addBlackPawnCapMove( const S_BOARD *pos, const int from, const int to, const int cap, S_MOVELIST *list ) {
+static void addBlackPawnCapMove( const S_BOARD *pos, const int from, const int to, const int cap, S_MOVELIST *list ) {
 	ASSERT(pieceValidEmpty(cap));
 	ASSERT(sqOnBoard(from));
 	ASSERT(sqOnBoard(to));
@@ -143,7 +143,7 @@ void addBlackPawnCapMove( const S_BOARD *pos, const int from, const int to, cons
 	}
 }
 
-void addBlackPawnMove( const S_BOARD *pos, const int from, const int to, S_MOVELIST *list ) {
+static void addBlackPawnMove( const S_BOARD *pos, const int from, const int to, S_MOVELIST *list ) {
 	ASSERT(sqOnBoard(from));
 	ASSERT(sqOnBoard(to));
 
@@ -170,8 +170,6 @@ void generateAllMoves(const S_BOARD *pos, S_MOVELIST *list) {
 	int index = 0;
 	int pceIndex = 0;
 	
-	printf("\n\nSide: %d\n",side);
-
 	if(side == WHITE) {
 		for(pceNum = 0; pceNum < pos->pceNum[wP]; ++pceNum) {
 			sq = pos->pList[wP][pceNum];

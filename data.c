@@ -60,12 +60,13 @@ int PieceVal[13]= { 0, 100, 325, 325, 550, 1000, 50000, 100, 325, 325, 550, 1000
 int PieceCol[13] = { BOTH, WHITE, WHITE, WHITE, WHITE, WHITE, WHITE, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK };
 
 /*
-    These 4 arrays below are simply used to identify whether a given piece
+    These 5 arrays below are simply used to identify whether a given piece
     is of certain type based on .PNBRQKpnbrqk
     For example:
 
         PieceKnight[wN] is going to return true
 */
+int PiecePawn[13] = { false, true, false, false, false, false, false, true, false, false, false, false, false };	
 int PieceKnight[13] = { false, false, true, false, false, false, false, false, true, false, false, false, false };
 int PieceKing[13] = { false, false, false, false, false, false, true, false, false, false, false, false, true };
 int PieceRookQueen[13] = { false, false, false, false, true, true, false, false, false, false, true, true, false };

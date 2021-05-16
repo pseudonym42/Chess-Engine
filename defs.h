@@ -103,6 +103,16 @@ typedef struct {
 } S_MOVELIST;
 
 typedef struct {
+	U64 posKey;
+	int move;
+} S_PVENTRY;
+
+typedef struct {
+	S_PVENTRY *pTable;
+	int numEntries;
+} S_PVTABLE;
+
+typedef struct {
     int move;
     int castlePerm;
     int enPas;
@@ -255,6 +265,9 @@ typedef struct {
     */
     int pList[13][10];
 
+    // principal variation table
+    S_PVTABLE PvTable[1];
+
 } S_BOARD;
 
 /* GLOBALS */
@@ -376,7 +389,7 @@ extern int PieceSlides[13];
 #define MFLAGCA 0x1000000
 #define MFLAGCAP 0x7C000
 #define MFLAGPROM 0xF00000
-
+#define NOMOVE 0
 
 /* MACROS */
 
@@ -440,6 +453,7 @@ extern int squareAttacked(const int sq, const int side, const S_BOARD *pos);
 extern char *printMove(const int move);
 extern char *printSq(const int sq);
 extern void printMoveList(const S_MOVELIST *list);
+extern int ParseMove(char *ptrChar, S_BOARD *pos);
 
 //validate.c
 extern int sqOnBoard(const int sq);
@@ -450,10 +464,21 @@ extern int pieceValid(const int pce);
 
 // movegen.c
 extern void generateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
+void TakeMove(S_BOARD *pos);
+int MakeMove(S_BOARD *pos, int move);
 
+// perft.c
+void Perft(int depth, S_BOARD *pos);
 
+// search.c
+extern void SearchPosition(S_BOARD *pos);
 
+// misc.c 
+extern int GetTimeMs();
 
-
+// pvtable.c
+extern void InitPvTable(S_PVTABLE *table);
+extern void StorePvMove(const S_BOARD *pos, const int move);
+extern int ProbePvTable(const S_BOARD *pos);
 
 #endif

@@ -210,7 +210,7 @@ int MakeMove(S_BOARD *pos, int move) {
 	MovePiece(from, to, pos);
 	
 	int prPce = PROMOTED(move);
-    if(prPce != EMPTY)   {
+    if (prPce != EMPTY)   {
         ASSERT(pieceValid(prPce) && !PiecePawn[prPce]);
         ClearPiece(to, pos);
         AddPiece(to, pos, prPce);
@@ -225,12 +225,84 @@ int MakeMove(S_BOARD *pos, int move) {
 
     ASSERT(checkBoard(pos));
 	
-		
 	if(squareAttacked(pos->KingSq[side],pos->side,pos))  {
-        // TakeMove(pos);
+        TakeMove(pos);
         return false;
     }
 	
 	return true;
+}
+
+void TakeMove(S_BOARD *pos) {
 	
+	ASSERT(checkBoard(pos));
+	
+	pos->hisPly--;
+    pos->ply--;
+	
+    int move = pos->history[pos->hisPly].move;
+    int from = FROMSQ(move);
+    int to = TOSQ(move);	
+	
+	ASSERT(sqOnBoard(from));
+    ASSERT(sqOnBoard(to));
+	
+	if(pos->enPas != NO_SQ) HASH_EP;
+    HASH_CA;
+
+    pos->castlePerm = pos->history[pos->hisPly].castlePerm;
+    pos->fiftyMove = pos->history[pos->hisPly].fiftyMove;
+    pos->enPas = pos->history[pos->hisPly].enPas;
+
+    if(pos->enPas != NO_SQ) HASH_EP;
+    HASH_CA;
+
+    pos->side ^= 1;
+    HASH_SIDE;
+	
+	if (MFLAGEP & move) {
+        if (pos->side == WHITE) {
+            AddPiece(to-10, pos, bP);
+        } else {
+            AddPiece(to+10, pos, wP);
+        }
+    } else if (MFLAGCA & move) {
+        switch(to) {
+            case C1:
+				MovePiece(D1, A1, pos);
+				break;
+            case C8:
+				MovePiece(D8, A8, pos);
+				break;
+            case G1:
+				MovePiece(F1, H1, pos);
+				break;
+            case G8:
+				MovePiece(F8, H8, pos);
+				break;
+            default:
+				ASSERT(false);
+				break;
+        }
+    }
+	
+	MovePiece(to, from, pos);
+	
+	if (PieceKing[pos->pieces[from]]) {
+        pos->KingSq[pos->side] = from;
+    }
+	
+	int captured = CAPTURED(move);
+    if (captured != EMPTY) {
+        ASSERT(pieceValid(captured));
+        AddPiece(to, pos, captured);
+    }
+	
+	if (PROMOTED(move) != EMPTY)   {
+        ASSERT(pieceValid(PROMOTED(move)) && !PiecePawn[PROMOTED(move)]);
+        ClearPiece(from, pos);
+        AddPiece(from, pos, (PieceCol[PROMOTED(move)] == WHITE ? wP : bP));
+    }
+	
+    ASSERT(checkBoard(pos));
 }

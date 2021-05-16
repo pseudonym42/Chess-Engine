@@ -348,6 +348,10 @@ void resetBoard (S_BOARD *pos) {
     pos->hisPly = 0;
     pos->castlePerm = 0;
     pos->posKey = 0ULL;
+    
+    /* First use: initialize this to NULL to avoid undefined behavior later */
+    pos->PvTable->pTable = NULL;
+    InitPvTable(pos->PvTable);
 }
 
 void printBoard(const S_BOARD *pos) {

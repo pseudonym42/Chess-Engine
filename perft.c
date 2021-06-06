@@ -54,14 +54,3 @@ void PerftTest(int depth, S_BOARD *pos) {
 	printf("\nTest Complete : %ld nodes visited in %dms\n",leafNodes,GetTimeMs() - start);
     return;
 }
-
-
-
-
-
-
-
-
-
-
-

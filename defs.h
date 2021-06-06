@@ -76,6 +76,9 @@ exit(1);}
 // max number of moves that can be in a given position
 #define MAX_POSITION_MOVES 256
 
+// max depth the program will search for
+#define MAXDEPTH 64
+
 /*
     This struct allows to store data about each half move
     so we could store them in history and develop "undo move"
@@ -267,8 +270,30 @@ typedef struct {
 
     // principal variation table
     S_PVTABLE PvTable[1];
+    int PvArray[MAXDEPTH];
+
+    int searchHistory[13][BRD_SQ_NUM];
+	int searchKillers[2][MAXDEPTH];
 
 } S_BOARD;
+
+typedef struct {
+
+	int starttime;
+	int stoptime;
+	int depth;
+	int depthset;
+	int timeset;
+	int movestogo;
+	int infinite;
+	
+    // number of positions the engine finds in the search tree
+	long nodes;
+	
+	int quit;
+	int stopped;
+
+} S_SEARCHINFO;
 
 /* GLOBALS */
 extern int Sq120ToSq64[BRD_SQ_NUM];
@@ -455,7 +480,7 @@ extern char *printSq(const int sq);
 extern void printMoveList(const S_MOVELIST *list);
 extern int ParseMove(char *ptrChar, S_BOARD *pos);
 
-//validate.c
+// validate.c
 extern int sqOnBoard(const int sq);
 extern int sideValid(const int side);
 extern int fileRankValid(const int fr);
@@ -464,14 +489,18 @@ extern int pieceValid(const int pce);
 
 // movegen.c
 extern void generateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
-void TakeMove(S_BOARD *pos);
-int MakeMove(S_BOARD *pos, int move);
+extern int MoveExists(S_BOARD *pos, const int move);
+
+// makemove.c
+extern void TakeMove(S_BOARD *pos);
+extern int MakeMove(S_BOARD *pos, int move);
 
 // perft.c
-void Perft(int depth, S_BOARD *pos);
+extern void Perft(int depth, S_BOARD *pos);
+extern void PerftTest(int depth, S_BOARD *pos);
 
 // search.c
-extern void SearchPosition(S_BOARD *pos);
+extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
 
 // misc.c 
 extern int GetTimeMs();
@@ -480,5 +509,13 @@ extern int GetTimeMs();
 extern void InitPvTable(S_PVTABLE *table);
 extern void StorePvMove(const S_BOARD *pos, const int move);
 extern int ProbePvTable(const S_BOARD *pos);
+extern int GetPvLine(const int depth, S_BOARD *pos);
+extern void ClearPvTable(S_PVTABLE *table);
+
+// evaluate.c
+extern int EvalPosition(const S_BOARD *pos);
+
+
+
 
 #endif

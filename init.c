@@ -250,4 +250,5 @@ void allInit(void) {
     initBitMasks();
     initHashKeys();
     initFilesRanksBrd();
+    InitMvvLva();
 }

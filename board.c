@@ -350,8 +350,7 @@ void resetBoard (S_BOARD *pos) {
     pos->posKey = 0ULL;
     
     /* First use: initialize this to NULL to avoid undefined behavior later */
-    pos->PvTable->pTable = NULL;
-    InitPvTable(pos->PvTable);
+    // pos->PvTable->pTable = NULL;
 }
 
 void printBoard(const S_BOARD *pos) {

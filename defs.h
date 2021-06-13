@@ -293,6 +293,12 @@ typedef struct {
 	int quit;
 	int stopped;
 
+    // fail high
+    float fh;
+
+    // fail high first
+	float fhf;
+
 } S_SEARCHINFO;
 
 /* GLOBALS */
@@ -490,6 +496,7 @@ extern int pieceValid(const int pce);
 // movegen.c
 extern void generateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 extern int MoveExists(S_BOARD *pos, const int move);
+extern int InitMvvLva();
 
 // makemove.c
 extern void TakeMove(S_BOARD *pos);

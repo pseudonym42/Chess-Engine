@@ -495,6 +495,7 @@ extern int pieceValid(const int pce);
 
 // movegen.c
 extern void generateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
+extern void GenerateAllCaps(const S_BOARD *pos, S_MOVELIST *list);
 extern int MoveExists(S_BOARD *pos, const int move);
 extern int InitMvvLva();
 
@@ -511,6 +512,7 @@ extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
 
 // misc.c 
 extern int GetTimeMs();
+extern void ReadInput(S_SEARCHINFO *info);
 
 // pvtable.c
 extern void InitPvTable(S_PVTABLE *table);
@@ -522,7 +524,8 @@ extern void ClearPvTable(S_PVTABLE *table);
 // evaluate.c
 extern int EvalPosition(const S_BOARD *pos);
 
-
+// uci.c 
+extern void Uci_Loop(S_BOARD *pos, S_SEARCHINFO *info);
 
 
 #endif

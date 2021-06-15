@@ -17,9 +17,6 @@ I wanted to learn C and understand better how chess game engines work. As I was 
 
 To understand at least some basis of how chess games are built use this website - [Chess Programming Wiki](https://www.chessprogramming.org/Main_Page).
 
-# Screenshots
-
-TBC
 
 # Did I make any changes to the original code?
 
@@ -73,6 +70,17 @@ A: They are not, read about it [here](https://en.wikipedia.org/wiki/External_var
 Q: How many moves are calculated by AI per second?  
 A: Around 500k
 
-# Useful links
+# How to use the tool?
 
-1. Images for pieces: https://pixabay.com/images/search/chess%20pieces/
+The tool is written to confirm with the UCI protocol. See https://www.shredderchess.com/chess-features/uci-universal-chess-interface.html
+for more information
+
+Popular commands:
+
+1. Quit: `quit`
+
+2. Set start position: `position startpos`
+
+3. Set certain FEN: `position fen <FEN>`
+
+4. Set an FEN and add moves: `position fen <FEN> moves <MOVES>`

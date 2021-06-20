@@ -47,11 +47,12 @@ Changes to the function names:
 * `initBitMasks` instead of `InitBitMasks`
 * `initFilesRanksBrd` instead of `InitFilesRanksBrd`
 * `initLookUpArrays` instead of `InitSq120To64`
-* `parseFEN` instead of `Parse_Fen`
+* `parseFEN` instead of `ParseFen`
 * `pieceValid` instead of `PieceValid`
 * `pieceValidEmpty` instead of `PieceValidEmpty`
 * `popBit` instead of `PopBit`
 * `printBoard` instead of `PrintBoard`
+* `printBitBoard` instead of `PrintBitBoard`
 * `printMove` instead of `PrMove`
 * `printMoveList` instead of `PrintMoveList`
 * `printSq` instead of `PrSq`
@@ -72,8 +73,7 @@ A: Around 500k
 
 # How to use the tool?
 
-The tool is written to confirm with the UCI protocol. See https://www.shredderchess.com/chess-features/uci-universal-chess-interface.html
-for more information
+The tool is written to conform with the UCI and Winboard protocols. It can also be used to play against PC via console.
 
 Popular commands:
 
@@ -84,3 +84,9 @@ Popular commands:
 3. Set certain FEN: `position fen <FEN>`
 
 4. Set an FEN and add moves: `position fen <FEN> moves <MOVES>`
+
+5. Start working in uci mode: `uci`
+
+6. Start working in winboard mode: `xboard`
+
+7. Play game via console mode: `vice`

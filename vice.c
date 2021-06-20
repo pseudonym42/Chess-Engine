@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdio.h>
 #include <time.h>
 #include "defs.h"
@@ -14,11 +15,41 @@ int main(void) {
 	allInit();
 
 	S_BOARD pos[1];
-    S_SEARCHINFO info[1];   
+    S_SEARCHINFO info[1];
+	info->quit = false;
 	pos->PvTable->pTable = NULL;
     InitPvTable(pos->PvTable);
+	setbuf(stdin, NULL);
+    setbuf(stdout, NULL);
+	
+	printf("Welcome to Vice! Type 'vice' for console mode...\n");
+	
+	char line[256];
+	while (1) {
+		memset(&line[0], 0, sizeof(line));
 
-	Uci_Loop(pos, info);
+		fflush(stdout);
+		if (!fgets(line, 256, stdin))
+			continue;
+		if (line[0] == '\n')
+			continue;
+		if (!strncmp(line, "uci", 3)) {			
+			Uci_Loop(pos, info);
+			if(info->quit == 1) break;
+			continue;
+		} else if (!strncmp(line, "xboard", 6)) {
+			XBoard_Loop(pos, info);
+			if(info->quit == 1) break;
+			continue;
+		} else if (!strncmp(line, "vice", 4)) {
+			Console_Loop(pos, info);
+			if (info->quit == 1) break;
+			continue;
+		} else if(!strncmp(line, "quit", 4))	{
+			break;
+		}
+	}
+	
 	free(pos->PvTable->pTable);
 	return 0;
 }

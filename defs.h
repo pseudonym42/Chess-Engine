@@ -151,6 +151,8 @@ enum { RANK_1, RANK_2, RANK_3, RANK_4, RANK_5, RANK_6, RANK_7, RANK_8, RANK_NONE
 
 enum { WHITE, BLACK, BOTH };
 
+enum { UCIMODE, XBOARDMODE, CONSOLEMODE };
+
 /* This enum represents board square values from BRD_SQ_NUM perspective */
 enum {
     A1 = 21, B1, C1, D1, E1, F1, G1, H1,
@@ -299,6 +301,9 @@ typedef struct {
     // fail high first
 	float fhf;
 
+    int GAME_MODE;
+	int POST_THINKING;
+
 } S_SEARCHINFO;
 
 /* GLOBALS */
@@ -329,6 +334,15 @@ extern int PieceKing[13];
 extern int PieceRookQueen[13];
 extern int PieceBishopQueen[13];
 extern int PieceSlides[13];
+
+extern int Mirror64[64];
+
+extern U64 FileBBMask[8];
+extern U64 RankBBMask[8];
+
+extern U64 BlackPassedMask[64];
+extern U64 WhitePassedMask[64];
+extern U64 IsolatedMask[64];
 
 /*
     GAME MOVE 
@@ -455,6 +469,8 @@ extern int PieceSlides[13];
 #define IsKn(p) (PieceKnight[(p)])
 #define IsKi(p) (PieceKing[(p)])
 
+#define MIRROR64(sq) (Mirror64[(sq)])
+
 
 /* FUNCTIONS */
 
@@ -476,6 +492,7 @@ extern void printBoard(const S_BOARD *pos);
 extern void updateListsMaterial(S_BOARD *pos);
 extern int parseFEN(char *fen, S_BOARD *pos);
 extern int checkBoard(const S_BOARD *pos);
+extern void MirrorBoard(S_BOARD *pos);
 
 /* attack.c */
 extern int squareAttacked(const int sq, const int side, const S_BOARD *pos);
@@ -502,6 +519,8 @@ extern int InitMvvLva();
 // makemove.c
 extern void TakeMove(S_BOARD *pos);
 extern int MakeMove(S_BOARD *pos, int move);
+extern void MakeNullMove(S_BOARD *pos);
+extern void TakeNullMove(S_BOARD *pos);
 
 // perft.c
 extern void Perft(int depth, S_BOARD *pos);
@@ -527,5 +546,8 @@ extern int EvalPosition(const S_BOARD *pos);
 // uci.c 
 extern void Uci_Loop(S_BOARD *pos, S_SEARCHINFO *info);
 
+// xboard.c 
+extern void XBoard_Loop(S_BOARD *pos, S_SEARCHINFO *info);
+extern void Console_Loop(S_BOARD *pos, S_SEARCHINFO *info);
 
 #endif
